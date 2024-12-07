@@ -118,6 +118,26 @@ const EditUser = () => {
               autoComplete='new-password'
             />
           </Form.Field>
+          {
+              userId && <>
+                <Form.Field>
+                  <Form.Dropdown
+                      label='分组'
+                      placeholder={'请选择分组'}
+                      name='group'
+                      fluid
+                      search
+                      selection
+                      allowAdditions
+                      additionLabel={'请在系统设置页面编辑分组倍率以添加新的分组：'}
+                      onChange={handleInputChange}
+                      value={inputs.group}
+                      autoComplete='new-password'
+                      options={groupOptions}
+                  />
+                </Form.Field>
+              </>
+          }
           <Button onClick={handleCancel}>取消</Button>
           <Button positive onClick={submit}>提交</Button>
         </Form>
