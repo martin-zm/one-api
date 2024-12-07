@@ -105,6 +105,41 @@ const LogsTable = () => {
     setShowStat(!showStat);
   };
 
+  const exportLogs = async (startIdx) => {
+    let url = '';
+    let localStartTimestamp = Date.parse(start_timestamp) / 1000;
+    let localEndTimestamp = Date.parse(end_timestamp) / 1000;
+    if (isAdminUser) {
+      url = `/api/log/export?p=${startIdx}&type=${logType}&username=${username}&token_name=${token_name}&model_name=${model_name}&start_timestamp=${localStartTimestamp}&end_timestamp=${localEndTimestamp}&channel=${channel}`;
+    } else {
+      url = `/api/log/self/export?p=${startIdx}&type=${logType}&token_name=${token_name}&model_name=${model_name}&start_timestamp=${localStartTimestamp}&end_timestamp=${localEndTimestamp}`;
+    }
+    console.log("url: " + url)
+    try {
+      const res = await API.get(url, {
+        responseType: 'blob', // 设置响应类型为 blob
+      });
+      // 检查响应是否为 Blob 对象
+      if (!(res.data instanceof Blob)) {
+        throw new Error('Unexpected response format');
+      }
+      // 创建 Blob URL 并触发下载
+      const blob = new Blob([res.data], { type: 'text/csv' });
+      const blobUrl = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = blobUrl;
+      a.download = 'log.csv';
+      a.click();
+      window.URL.revokeObjectURL(blobUrl);
+    } catch (error) {
+      console.error('Error exporting logs:', error);
+      // 显示用户友好的错误提示
+      alert('Failed to export logs: ' + error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const loadLogs = async (startIdx) => {
     let url = '';
     let localStartTimestamp = Date.parse(start_timestamp) / 1000;
@@ -144,6 +179,13 @@ const LogsTable = () => {
     setLoading(true);
     setActivePage(1);
     await loadLogs(0);
+  };
+
+  const exportFile = async () => {
+    setLoading(true);
+    setActivePage(1);
+    await exportLogs(0);
+    // await loadLogs(0);
   };
 
   useEffect(() => {
@@ -218,6 +260,7 @@ const LogsTable = () => {
                         name='end_timestamp'
                         onChange={handleInputChange} />
             <Form.Button fluid label='操作' width={2} onClick={refresh}>查询</Form.Button>
+            <Form.Button fluid label='操作' width={2} onClick={exportFile}>导出</Form.Button>
           </Form.Group>
           {
             isAdminUser && <>
@@ -279,15 +322,6 @@ const LogsTable = () => {
               <Table.HeaderCell
                 style={{ cursor: 'pointer' }}
                 onClick={() => {
-                  sortLog('type');
-                }}
-                width={1}
-              >
-                类型
-              </Table.HeaderCell>
-              <Table.HeaderCell
-                style={{ cursor: 'pointer' }}
-                onClick={() => {
                   sortLog('model_name');
                 }}
                 width={2}
@@ -297,38 +331,11 @@ const LogsTable = () => {
               <Table.HeaderCell
                 style={{ cursor: 'pointer' }}
                 onClick={() => {
-                  sortLog('prompt_tokens');
-                }}
-                width={1}
-              >
-                提示
-              </Table.HeaderCell>
-              <Table.HeaderCell
-                style={{ cursor: 'pointer' }}
-                onClick={() => {
-                  sortLog('completion_tokens');
-                }}
-                width={1}
-              >
-                补全
-              </Table.HeaderCell>
-              <Table.HeaderCell
-                style={{ cursor: 'pointer' }}
-                onClick={() => {
                   sortLog('quota');
                 }}
                 width={1}
               >
                 额度
-              </Table.HeaderCell>
-              <Table.HeaderCell
-                style={{ cursor: 'pointer' }}
-                onClick={() => {
-                  sortLog('content');
-                }}
-                width={isAdminUser ? 4 : 6}
-              >
-                详情
               </Table.HeaderCell>
             </Table.Row>
           </Table.Header>
@@ -355,45 +362,12 @@ const LogsTable = () => {
                       )
                     }
                     <Table.Cell>{log.token_name ? <Label basic>{log.token_name}</Label> : ''}</Table.Cell>
-                    <Table.Cell>{renderType(log.type)}</Table.Cell>
                     <Table.Cell>{log.model_name ? <Label basic>{log.model_name}</Label> : ''}</Table.Cell>
-                    <Table.Cell>{log.prompt_tokens ? log.prompt_tokens : ''}</Table.Cell>
-                    <Table.Cell>{log.completion_tokens ? log.completion_tokens : ''}</Table.Cell>
                     <Table.Cell>{log.quota ? renderQuota(log.quota, 6) : ''}</Table.Cell>
-                    <Table.Cell>{log.content}</Table.Cell>
                   </Table.Row>
                 );
               })}
           </Table.Body>
-
-          <Table.Footer>
-            <Table.Row>
-              <Table.HeaderCell colSpan={'10'}>
-                <Select
-                  placeholder='选择明细分类'
-                  options={LOG_OPTIONS}
-                  style={{ marginRight: '8px' }}
-                  name='logType'
-                  value={logType}
-                  onChange={(e, { name, value }) => {
-                    setLogType(value);
-                  }}
-                />
-                <Button size='small' onClick={refresh} loading={loading}>刷新</Button>
-                <Pagination
-                  floated='right'
-                  activePage={activePage}
-                  onPageChange={onPaginationChange}
-                  size='small'
-                  siblingRange={1}
-                  totalPages={
-                    Math.ceil(logs.length / ITEMS_PER_PAGE) +
-                    (logs.length % ITEMS_PER_PAGE === 0 ? 1 : 0)
-                  }
-                />
-              </Table.HeaderCell>
-            </Table.Row>
-          </Table.Footer>
         </Table>
       </Segment>
     </>

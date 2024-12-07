@@ -1,6 +1,8 @@
 package controller
 
 import (
+	"encoding/csv"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/songquanpeng/one-api/common/config"
 	"github.com/songquanpeng/one-api/common/ctxkey"
@@ -8,6 +10,57 @@ import (
 	"net/http"
 	"strconv"
 )
+
+func ExportAllLogs(c *gin.Context) {
+	p, _ := strconv.Atoi(c.Query("p"))
+	if p < 0 {
+		p = 0
+	}
+	logType, _ := strconv.Atoi(c.Query("type"))
+	startTimestamp, _ := strconv.ParseInt(c.Query("start_timestamp"), 10, 64)
+	endTimestamp, _ := strconv.ParseInt(c.Query("end_timestamp"), 10, 64)
+	username := c.Query("username")
+	tokenName := c.Query("token_name")
+	modelName := c.Query("model_name")
+	channel, _ := strconv.Atoi(c.Query("channel"))
+	logs, err := model.ExportAllLogs(logType, startTimestamp, endTimestamp, modelName, username, tokenName, p*config.ItemsPerPage, config.ItemsPerPage, channel)
+	if err != nil {
+		c.JSON(http.StatusOK, gin.H{
+			"success": false,
+			"message": err.Error(),
+		})
+		return
+	}
+	// 将查询结果转换为CSV格式
+	var csvData [][]string
+	// 添加表头
+	csvData = append(csvData, []string{"用户", "消耗（单位美元）"})
+	for _, log := range logs {
+		// 将 Quota 转换为美元
+		dollarAmount := float64(log.Quota) / 500000
+		dollarString := fmt.Sprintf("$%.8f", dollarAmount)
+		csvData = append(csvData, []string{
+			log.Username,
+			dollarString,
+		})
+	}
+
+	// 设置HTTP头信息
+	c.Header("Content-Disposition", "attachment; filename=stastic.csv")
+	c.Header("Content-Type", "text/csv")
+
+	// 写入CSV数据
+	w := csv.NewWriter(c.Writer)
+	defer w.Flush()
+	if err := w.WriteAll(csvData); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"success": false,
+			"message": "Failed to write CSV data",
+		})
+		return
+	}
+	return
+}
 
 func GetAllLogs(c *gin.Context) {
 	p, _ := strconv.Atoi(c.Query("p"))
@@ -61,6 +114,56 @@ func GetUserLogs(c *gin.Context) {
 		"message": "",
 		"data":    logs,
 	})
+	return
+}
+
+func ExportUserLogs(c *gin.Context) {
+	p, _ := strconv.Atoi(c.Query("p"))
+	if p < 0 {
+		p = 0
+	}
+	userId := c.GetInt(ctxkey.Id)
+	logType, _ := strconv.Atoi(c.Query("type"))
+	startTimestamp, _ := strconv.ParseInt(c.Query("start_timestamp"), 10, 64)
+	endTimestamp, _ := strconv.ParseInt(c.Query("end_timestamp"), 10, 64)
+	tokenName := c.Query("token_name")
+	modelName := c.Query("model_name")
+	logs, err := model.ExportUserLogs(userId, logType, startTimestamp, endTimestamp, modelName, tokenName, p*config.ItemsPerPage, config.ItemsPerPage)
+	if err != nil {
+		c.JSON(http.StatusOK, gin.H{
+			"success": false,
+			"message": err.Error(),
+		})
+		return
+	}
+	// 将查询结果转换为CSV格式
+	var csvData [][]string
+	// 添加表头
+	csvData = append(csvData, []string{"用户", "消耗（单位美元）"})
+	for _, log := range logs {
+		// 将 Quota 转换为美元
+		dollarAmount := float64(log.Quota) / 500000
+		dollarString := fmt.Sprintf("$%.8f", dollarAmount)
+		csvData = append(csvData, []string{
+			log.Username,
+			dollarString,
+		})
+	}
+
+	// 设置HTTP头信息
+	c.Header("Content-Disposition", "attachment; filename=stastic.csv")
+	c.Header("Content-Type", "text/csv")
+
+	// 写入CSV数据
+	w := csv.NewWriter(c.Writer)
+	defer w.Flush()
+	if err := w.WriteAll(csvData); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"success": false,
+			"message": "Failed to write CSV data",
+		})
+		return
+	}
 	return
 }
 

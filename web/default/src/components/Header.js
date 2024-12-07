@@ -8,11 +8,11 @@ import '../index.css';
 
 // Header Buttons
 let headerButtons = [
-  {
-    name: '首页',
-    to: '/',
-    icon: 'home'
-  },
+  // {
+  //   name: '首页',
+  //   to: '/',
+  //   icon: 'home'
+  // },
   {
     name: '渠道',
     to: '/channel',
@@ -24,17 +24,17 @@ let headerButtons = [
     to: '/token',
     icon: 'key'
   },
-  {
-    name: '兑换',
-    to: '/redemption',
-    icon: 'dollar sign',
-    admin: true
-  },
-  {
-    name: '充值',
-    to: '/topup',
-    icon: 'cart'
-  },
+  // {
+  //   name: '兑换',
+  //   to: '/redemption',
+  //   icon: 'dollar sign',
+  //   admin: true
+  // },
+  // {
+  //   name: '充值',
+  //   to: '/topup',
+  //   icon: 'cart'
+  // },
   {
     name: '用户',
     to: '/user',
@@ -51,11 +51,11 @@ let headerButtons = [
     to: '/setting',
     icon: 'setting'
   },
-  {
-    name: '关于',
-    to: '/about',
-    icon: 'info circle'
-  }
+  // {
+  //   name: '关于',
+  //   to: '/about',
+  //   icon: 'info circle'
+  // }
 ];
 
 if (localStorage.getItem('chat_link')) {
