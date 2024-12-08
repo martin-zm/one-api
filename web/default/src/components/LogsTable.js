@@ -260,7 +260,7 @@ const LogsTable = () => {
                         name='end_timestamp'
                         onChange={handleInputChange} />
             <Form.Button fluid label='操作' width={2} onClick={refresh}>查询</Form.Button>
-            <Form.Button fluid label='操作' width={2} onClick={exportFile}>导出</Form.Button>
+            <Form.Button fluid label='导出' width={2} onClick={exportFile}>导出</Form.Button>
           </Form.Group>
           {
             isAdminUser && <>
