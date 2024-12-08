@@ -242,51 +242,6 @@ const EditChannel = () => {
               onChange={handleInputChange}
             />
           </Form.Field>
-          {
-            inputs.type === 3 && (
-              <>
-                <Message>
-                  注意，<strong>模型部署名称必须和模型名称保持一致</strong>，因为 One API 会把请求体中的 model
-                  参数替换为你的部署名称（模型名称中的点会被剔除），<a target='_blank'
-                                                                    href='https://github.com/songquanpeng/one-api/issues/133?notification_referrer_id=NT_kwDOAmJSYrM2NjIwMzI3NDgyOjM5OTk4MDUw#issuecomment-1571602271'>图片演示</a>。
-                </Message>
-                <Form.Field>
-                  <Form.Input
-                    label='AZURE_OPENAI_ENDPOINT'
-                    name='base_url'
-                    placeholder={'请输入 AZURE_OPENAI_ENDPOINT，例如：https://docs-test-001.openai.azure.com'}
-                    onChange={handleInputChange}
-                    value={inputs.base_url}
-                    autoComplete='new-password'
-                  />
-                </Form.Field>
-                <Form.Field>
-                  <Form.Input
-                    label='默认 API 版本'
-                    name='other'
-                    placeholder={'请输入默认 API 版本，例如：2024-03-01-preview，该配置可以被实际的请求查询参数所覆盖'}
-                    onChange={handleInputChange}
-                    value={inputs.other}
-                    autoComplete='new-password'
-                  />
-                </Form.Field>
-              </>
-            )
-          }
-          {
-            inputs.type === 8 && (
-              <Form.Field>
-                <Form.Input
-                  label='Base URL'
-                  name='base_url'
-                  placeholder={'请输入自定义渠道的 Base URL，例如：https://openai.justsong.cn'}
-                  onChange={handleInputChange}
-                  value={inputs.base_url}
-                  autoComplete='new-password'
-                />
-              </Form.Field>
-            )
-          }
           <Form.Field>
             <Form.Input
               label='名称'
@@ -315,62 +270,6 @@ const EditChannel = () => {
               options={groupOptions}
             />
           </Form.Field>
-          {
-            inputs.type === 18 && (
-              <Form.Field>
-                <Form.Input
-                  label='模型版本'
-                  name='other'
-                  placeholder={'请输入星火大模型版本，注意是接口地址中的版本号，例如：v2.1'}
-                  onChange={handleInputChange}
-                  value={inputs.other}
-                  autoComplete='new-password'
-                />
-              </Form.Field>
-            )
-          }
-          {
-            inputs.type === 21 && (
-              <Form.Field>
-                <Form.Input
-                  label='知识库 ID'
-                  name='other'
-                  placeholder={'请输入知识库 ID，例如：123456'}
-                  onChange={handleInputChange}
-                  value={inputs.other}
-                  autoComplete='new-password'
-                />
-              </Form.Field>
-            )
-          }
-          {
-            inputs.type === 17 && (
-              <Form.Field>
-                <Form.Input
-                  label='插件参数'
-                  name='other'
-                  placeholder={'请输入插件参数，即 X-DashScope-Plugin 请求头的取值'}
-                  onChange={handleInputChange}
-                  value={inputs.other}
-                  autoComplete='new-password'
-                />
-              </Form.Field>
-            )
-          }
-          {
-            inputs.type === 34 && (
-              <Message>
-                对于 Coze 而言，模型名称即 Bot ID，你可以添加一个前缀 `bot-`，例如：`bot-123456`。
-              </Message>
-            )
-          }
-          {
-            inputs.type === 40 && (
-              <Message>
-                对于豆包而言，需要手动去 <a target="_blank" href="https://console.volcengine.com/ark/region:ark+cn-beijing/endpoint">模型推理页面</a> 创建推理接入点，以接入点名称作为模型名称，例如：`ep-20240608051426-tkxvl`。
-              </Message>
-            )
-          }
           {
             inputs.type !== 43 && (
               <Form.Field>
@@ -426,111 +325,6 @@ const EditChannel = () => {
             )
           }
           {
-          inputs.type !== 43 && (<>
-              <Form.Field>
-                <Form.TextArea
-                  label='模型重定向'
-                  placeholder={`此项可选，用于修改请求体中的模型名称，为一个 JSON 字符串，键为请求中模型名称，值为要替换的模型名称，例如：\n${JSON.stringify(MODEL_MAPPING_EXAMPLE, null, 2)}`}
-                  name='model_mapping'
-                  onChange={handleInputChange}
-                  value={inputs.model_mapping}
-                  style={{ minHeight: 150, fontFamily: 'JetBrains Mono, Consolas' }}
-                  autoComplete='new-password'
-                />
-              </Form.Field>
-            <Form.Field>
-                <Form.TextArea
-                  label='系统提示词'
-                  placeholder={`此项可选，用于强制设置给定的系统提示词，请配合自定义模型 & 模型重定向使用，首先创建一个唯一的自定义模型名称并在上面填入，之后将该自定义模型重定向映射到该渠道一个原生支持的模型`}
-                  name='system_prompt'
-                  onChange={handleInputChange}
-                  value={inputs.system_prompt}
-                  style={{ minHeight: 150, fontFamily: 'JetBrains Mono, Consolas' }}
-                  autoComplete='new-password'
-                />
-              </Form.Field>
-              </>
-            )
-          }
-          {
-            inputs.type === 33 && (
-              <Form.Field>
-                <Form.Input
-                  label='Region'
-                  name='region'
-                  required
-                  placeholder={'region，e.g. us-west-2'}
-                  onChange={handleConfigChange}
-                  value={config.region}
-                  autoComplete=''
-                />
-                <Form.Input
-                  label='AK'
-                  name='ak'
-                  required
-                  placeholder={'AWS IAM Access Key'}
-                  onChange={handleConfigChange}
-                  value={config.ak}
-                  autoComplete=''
-                />
-                <Form.Input
-                  label='SK'
-                  name='sk'
-                  required
-                  placeholder={'AWS IAM Secret Key'}
-                  onChange={handleConfigChange}
-                  value={config.sk}
-                  autoComplete=''
-                />
-              </Form.Field>
-            )
-          }
-          {
-            inputs.type === 42 && (
-              <Form.Field>
-                <Form.Input
-                  label='Region'
-                  name='region'
-                  required
-                  placeholder={'Vertex AI Region.g. us-east5'}
-                  onChange={handleConfigChange}
-                  value={config.region}
-                  autoComplete=''
-                />
-                <Form.Input
-                  label='Vertex AI Project ID'
-                  name='vertex_ai_project_id'
-                  required
-                  placeholder={'Vertex AI Project ID'}
-                  onChange={handleConfigChange}
-                  value={config.vertex_ai_project_id}
-                  autoComplete=''
-                />
-                <Form.Input
-                  label='Google Cloud Application Default Credentials JSON'
-                  name='vertex_ai_adc'
-                  required
-                  placeholder={'Google Cloud Application Default Credentials JSON'}
-                  onChange={handleConfigChange}
-                  value={config.vertex_ai_adc}
-                  autoComplete=''
-                />
-              </Form.Field>
-            )
-          }
-          {
-            inputs.type === 34 && (
-              <Form.Input
-                label='User ID'
-                name='user_id'
-                required
-                placeholder={'生成该密钥的用户 ID'}
-                onChange={handleConfigChange}
-                value={config.user_id}
-                autoComplete=''
-              />)
-          }
-          {
             inputs.type !== 33 && inputs.type !== 42 && (batch ? <Form.Field>
               <Form.TextArea
                 label='密钥'
@@ -555,21 +349,6 @@ const EditChannel = () => {
             </Form.Field>)
           }
           {
-            inputs.type === 37 && (
-              <Form.Field>
-                <Form.Input
-                  label='Account ID'
-                  name='user_id'
-                  required
-                  placeholder={'请输入 Account ID，例如：d8d7c61dbc334c32d3ced580e4bf42b4'}
-                  onChange={handleConfigChange}
-                  value={config.user_id}
-                  autoComplete=''
-                />
-              </Form.Field>
-            )
-          }
-          {
             inputs.type !== 33 && !isEdit && (
               <Form.Checkbox
                 checked={batch}
@@ -586,20 +365,6 @@ const EditChannel = () => {
                   label='代理'
                   name='base_url'
                   placeholder={'此项可选，用于通过代理站来进行 API 调用，请输入代理站地址，格式为：https://domain.com'}
-                  onChange={handleInputChange}
-                  value={inputs.base_url}
-                  autoComplete='new-password'
-                />
-              </Form.Field>
-            )
-          }
-          {
-            inputs.type === 22 && (
-              <Form.Field>
-                <Form.Input
-                  label='私有部署地址'
-                  name='base_url'
-                  placeholder={'请输入私有部署地址，格式为：https://fastgpt.run/api/openapi'}
                   onChange={handleInputChange}
                   value={inputs.base_url}
                   autoComplete='new-password'

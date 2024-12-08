@@ -20,6 +20,14 @@ const Setting = () => {
 
   if (isRoot()) {
     panes.push({
+      menuItem: '运营设置',
+      render: () => (
+          <Tab.Pane attached={false}>
+            <OperationSetting />
+          </Tab.Pane>
+      )
+    });
+    panes.push({
       menuItem: '其他设置',
       render: () => (
         <Tab.Pane attached={false}>

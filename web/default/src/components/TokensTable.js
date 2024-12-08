@@ -8,15 +8,11 @@ import { renderQuota } from '../helpers/render';
 
 const COPY_OPTIONS = [
   { key: 'next', text: 'ChatGPT Next Web', value: 'next' },
-  { key: 'ama', text: 'BotGem', value: 'ama' },
-  { key: 'opencat', text: 'OpenCat', value: 'opencat' },
   { key: 'lobechat', text: 'LobeChat', value: 'lobechat' },
 ];
 
 const OPEN_LINK_OPTIONS = [
   { key: 'next', text: 'ChatGPT Next Web', value: 'next' },
-  { key: 'ama', text: 'BotGem', value: 'ama' },
-  { key: 'opencat', text: 'OpenCat', value: 'opencat' },
   { key: 'lobechat', text: 'LobeChat', value: 'lobechat' },
 ];
 
@@ -151,14 +147,6 @@ const TokensTable = () => {
     }
     let url;
     switch (type) {
-      case 'ama':
-        url = `ama://set-api-key?server=${encodedServerAddress}&key=sk-${key}`;
-        break;
-  
-      case 'opencat':
-        url = `opencat://team/join?domain=${encodedServerAddress}&token=sk-${key}`;
-        break;
-
       case 'lobechat':
         url = chatLink + `/?settings={"keyVaults":{"openai":{"apiKey":"sk-${key}","baseURL":"${serverAddress}/v1"}}}`;
         break;
@@ -357,17 +345,6 @@ const TokensTable = () => {
                         >
                           复制
                         </Button>
-                        <Dropdown
-                          className='button icon'
-                          floating
-                          options={COPY_OPTIONS.map(option => ({
-                            ...option,
-                            onClick: async () => {
-                              await onCopy(option.value, token.key);
-                            }
-                          }))}
-                          trigger={<></>}
-                        />
                       </Button.Group>
                       {' '}
                       <Button.Group color='blue' size={'small'}>
