@@ -40,7 +40,7 @@ func ExportAllLogs(c *gin.Context) {
 		dollarAmount := float64(log.Quota) / 500000
 		dollarString := fmt.Sprintf("$%.8f", dollarAmount)
 		csvData = append(csvData, []string{
-			log.Username,
+			log.TokenName,
 			dollarString,
 		})
 	}

@@ -53,6 +53,21 @@ const Home = () => {
   }, []);
   return (
     <>
+      {
+        homePageContentLoaded && homePageContent === '' ? <>
+          <Segment>
+            <Header as='h3'>系统状况</Header>
+              <p>名称：{statusState?.status?.system_name}</p>
+          </Segment>
+        </> : <>
+          {
+            homePageContent.startsWith('https://') ? <iframe
+              src={homePageContent}
+              style={{ width: '100%', height: '100vh', border: 'none' }}
+            /> : <div style={{ fontSize: 'larger' }} dangerouslySetInnerHTML={{ __html: homePageContent }}></div>
+          }
+        </>
+      }
     </>
   );
 };

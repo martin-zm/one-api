@@ -7,12 +7,10 @@ import { ITEMS_PER_PAGE } from '../constants';
 import { renderQuota } from '../helpers/render';
 
 const COPY_OPTIONS = [
-  { key: 'next', text: 'ChatGPT Next Web', value: 'next' },
   { key: 'lobechat', text: 'LobeChat', value: 'lobechat' },
 ];
 
 const OPEN_LINK_OPTIONS = [
-  { key: 'next', text: 'ChatGPT Next Web', value: 'next' },
   { key: 'lobechat', text: 'LobeChat', value: 'lobechat' },
 ];
 
@@ -103,15 +101,6 @@ const TokensTable = () => {
 
     let url;
     switch (type) {
-      case 'ama':
-        url = `ama://set-api-key?server=${encodedServerAddress}&key=sk-${key}`;
-        break;
-      case 'opencat':
-        url = `opencat://team/join?domain=${encodedServerAddress}&token=sk-${key}`;
-        break;
-      case 'next':
-        url = nextUrl;
-        break;
       case 'lobechat':
         url = nextLink + `/?settings={"keyVaults":{"openai":{"apiKey":"sk-${key}","baseURL":"${serverAddress}/v1"}}}`;
         break;
@@ -131,31 +120,16 @@ const TokensTable = () => {
     let serverAddress = '';
     if (status) {
       status = JSON.parse(status);
-      serverAddress = status.server_address; 
+      serverAddress = status.server_address;
     }
     if (serverAddress === '') {
       serverAddress = window.location.origin;
     }
     let encodedServerAddress = encodeURIComponent(serverAddress);
     const chatLink = localStorage.getItem('chat_link');
-    let defaultUrl;
-  
-    if (chatLink) {
-      defaultUrl = chatLink + `/#/?settings={"key":"sk-${key}","url":"${serverAddress}"}`;
-    } else {
-      defaultUrl = `https://app.nextchat.dev/#/?settings={"key":"sk-${key}","url":"${serverAddress}"}`;
-    }
-    let url;
-    switch (type) {
-      case 'lobechat':
-        url = chatLink + `/?settings={"keyVaults":{"openai":{"apiKey":"sk-${key}","baseURL":"${serverAddress}/v1"}}}`;
-        break;
+    let defaultUrl = chatLink + `/?settings={"keyVaults":{"openai":{"apiKey":"sk-${key}","baseURL":"${serverAddress}/v1"}}}`;
 
-      default:
-        url = defaultUrl;
-    }
-  
-    window.open(url, '_blank');
+    window.open(defaultUrl, '_blank');
   }
 
   useEffect(() => {
@@ -356,17 +330,6 @@ const TokensTable = () => {
                             }}>
                             聊天
                           </Button>
-                          <Dropdown   
-                            className="button icon"       
-                            floating
-                            options={OPEN_LINK_OPTIONS.map(option => ({
-                              ...option,
-                              onClick: async () => {
-                                await onOpenLink(option.value, token.key);
-                              }
-                            }))}       
-                            trigger={<></>}   
-                          />
                       </Button.Group>
                       {' '}
                       <Popup

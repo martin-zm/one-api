@@ -28,6 +28,14 @@ const Setting = () => {
       )
     });
     panes.push({
+      menuItem: '系统设置',
+      render: () => (
+        <Tab.Pane attached={false}>
+          <SystemSetting />
+        </Tab.Pane>
+      )
+    });
+    panes.push({
       menuItem: '其他设置',
       render: () => (
         <Tab.Pane attached={false}>

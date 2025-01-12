@@ -368,6 +368,23 @@ const LogsTable = () => {
                 );
               })}
           </Table.Body>
+          <Table.Footer>
+            <Table.Row>
+              <Table.HeaderCell colSpan={'10'}>
+                <Pagination
+                    floated='right'
+                    activePage={activePage}
+                    onPageChange={onPaginationChange}
+                    size='small'
+                    siblingRange={1}
+                    totalPages={
+                        Math.ceil(logs.length / ITEMS_PER_PAGE) +
+                        (logs.length % ITEMS_PER_PAGE === 0 ? 1 : 0)
+                    }
+                />
+              </Table.HeaderCell>
+            </Table.Row>
+          </Table.Footer>
         </Table>
       </Segment>
     </>

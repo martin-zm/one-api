@@ -145,7 +145,7 @@ func ExportAllLogs(logType int, startTimestamp int64, endTimestamp int64, modelN
 		tx = tx.Where("channel_id = ?", channel)
 	}
 	// 构建聚合查询
-	err = tx.Select("username, SUM(quota) as quota").Group("username").Order("username").Find(&logs).Error
+	err = tx.Select("token_name, SUM(quota) as quota").Group("token_name").Order("token_name").Find(&logs).Error
 	return logs, err
 }
 

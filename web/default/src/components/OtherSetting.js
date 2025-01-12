@@ -125,13 +125,24 @@ const OtherSetting = () => {
           </Form.Group>
           <Form.Button onClick={submitSystemName}>设置系统名称</Form.Button>
           <Form.Group widths='equal'>
+            <Form.Input
+                label='Logo 图片地址'
+                placeholder='在此输入 Logo 图片地址'
+                value={inputs.Logo}
+                name='Logo'
+                type='url'
+                onChange={handleInputChange}
+            />
+          </Form.Group>
+          <Form.Button onClick={submitLogo}>设置 Logo</Form.Button>
+          <Form.Group widths='equal'>
             <Form.TextArea
-              label='首页内容'
-              placeholder='在此输入首页内容，支持 Markdown & HTML 代码，设置后首页的状态信息将不再显示。如果输入的是一个链接，则会使用该链接作为 iframe 的 src 属性，这允许你设置任意网页作为首页。'
-              value={inputs.HomePageContent}
-              name='HomePageContent'
-              onChange={handleInputChange}
-              style={{ minHeight: 150, fontFamily: 'JetBrains Mono, Consolas' }}
+                label='首页内容'
+                placeholder='在此输入首页内容，支持 Markdown & HTML 代码，设置后首页的状态信息将不再显示。如果输入的是一个链接，则会使用该链接作为 iframe 的 src 属性，这允许你设置任意网页作为首页。'
+                value={inputs.HomePageContent}
+                name='HomePageContent'
+                onChange={handleInputChange}
+                style={{ minHeight: 150, fontFamily: 'JetBrains Mono, Consolas' }}
             />
           </Form.Group>
           <Form.Button onClick={() => submitOption('HomePageContent')}>保存首页内容</Form.Button>

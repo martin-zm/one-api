@@ -221,6 +221,25 @@ const OperationSetting = () => {
           }}>清理历史日志</Form.Button>
           <Divider />
           <Header as='h3'>
+            额度设置
+          </Header>
+          <Form.Group widths={4}>
+            <Form.Input
+                label='新用户初始额度'
+                name='QuotaForNewUser'
+                onChange={handleInputChange}
+                autoComplete='new-password'
+                value={inputs.QuotaForNewUser}
+                type='number'
+                min='0'
+                placeholder='例如：100'
+            />
+          </Form.Group>
+          <Form.Button onClick={() => {
+            submitConfig('quota').then();
+          }}>保存额度设置</Form.Button>
+          <Divider />
+          <Header as='h3'>
             倍率设置
           </Header>
           <Form.Group widths='equal'>
